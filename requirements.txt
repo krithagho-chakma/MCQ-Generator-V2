@@ -1,0 +1,7 @@
+streamlit
+google-generativeai
+google-genai
+pymupdf4llm
+pypandoc
+PyPDF2
+python-docx
