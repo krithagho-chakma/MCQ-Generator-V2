@@ -776,7 +776,7 @@ FIELD EXPECTATIONS:
 - subject: appropriate subject name.
 - chapter: appropriate chapter name.
 - question_category: appropriate category such as Board, Practice, Model Test, etc.
-- correct_option: only A, B, C or D.
+- correct_option: only A, B, C or D
 - The application's response schema defines the exact output fields. Return only the structured result; no commentary.
 
 {context_block}
