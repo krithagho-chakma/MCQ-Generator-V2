@@ -37,7 +37,7 @@ class MCQItem(BaseModel):
     subject: str
     chapter: str
     topics: str
-    question_category: str
+    question_category: Literal["Board"]
     difficulty_level: Literal["Easy", "Medium", "Hard"]
 
 
@@ -861,8 +861,8 @@ def build_existing_mcq_prompt(
         )
     else:
         topic_rule = (
-            "No target topic list was supplied. Infer one concise, academically "
-            "appropriate topic name for each MCQ."
+            "No target topic list was supplied. Search the provided doc file for topic. Use them strictly. "
+            "DO NOT generate topics for each MCQ."
         )
 
     return f"""
@@ -871,9 +871,10 @@ Convert ALL MCQs found in the supplied raw content into the application's struct
 Do not intentionally omit any question.
 
 PARSING RULES:
-- Preserve the original question meaning, options and supplied correct answer.
+- Preserve the original question title (MUST), meaning, options and supplied correct answer.
 - Number the final MCQs sequentially starting from 1.
 - Extract Question Title, Option A, Option B, Option C, Option D, Correct Option and Solution Body.
+- If a solution/explanation is provided in the uploaded file, use them for each respective MCQs strictly. DO NOT alter them.
 - If a solution/explanation is missing, create a brief accurate explanation UNLESS the special user instructions explicitly say not to generate an explanation.
 - Infer appropriate subject, chapter, question_category and difficulty_level (Easy, Medium or Hard) when missing.
 
@@ -898,10 +899,10 @@ TOPIC RULE:
 
 SOLUTION BODY FORMAT:
 Unless the special user instructions explicitly request no explanation:
-- Line 1: exact text of the correct option, without A./B./C./D. or another option label.
+- Line 1: exact title text of the correct option, DO NOT use A./B./C./D. or another option label.
 - Line 2: blank line.
 - Line 3 onward: explanation beginning exactly with "ব্যাখ্যা:".
-If the user explicitly requests no explanation, keep solution_body to the correct answer text only.
+If the user explicitly requests no explanation, keep solution_body to the correct answer's title text only.
 
 SPECIAL USER INSTRUCTIONS (CRITICAL):
 {special_instructions if special_instructions else "None provided. Follow standard parsing and formatting."}
